@@ -4,6 +4,9 @@ from utils.tools import get_class_weight
 from tensorflow.keras.optimizers import Adam
 import pandas as pd
 import numpy as np
+import gc
+
+gc.collect()
 
 INPUT_SHAPE_1 = (448, 448, 3)
 INPUT_SHAPE_2 = (128,)
@@ -13,7 +16,7 @@ BBOX_NUM = 2
 IMAGES_PATH = "C:/Users/Administrator/Desktop/resized/images/"
 LABELS_PATH = "C:/Users/Administrator/Desktop/resized/annotations/"
 RADAR_PATH = "C:/Users/Administrator/PycharmProjects/radar_classification/data/radar_train_car_only.csv"
-EPOCHS = 10
+EPOCHS = 100
 
 # Load model
 yolo = MyYolo(INPUT_SHAPE_1, INPUT_SHAPE_2, CLASS_NAMES)
@@ -92,12 +95,16 @@ binary_weight = get_class_weight(
 loss = yolo.loss(binary_weight)
 metrics = yolo.metrics("obj+iou+recall0.5")
 yolo.model.compile(optimizer=Adam(learning_rate=1e-4),
-                   loss=loss,
-                   metrics=metrics)
+              loss=loss,
+              metrics=metrics)
 
 # Fit model
 history = yolo.model.fit([train_imgs, train_radar_data],
                          [train_labels, train_radar_labels],
-                         100)
+                         epochs=EPOCHS,
+                         batch_size=4,
+                         verbose=1,
+                         validation_data=([valid_imgs, valid_radar_data],
+                                          [valid_labels, valid_radar_labels]))
 
-# prediction = yolo.model.predict(test_img)
+prediction = yolo.model.save('C:/Users/Administrator/Desktop/radar_image_yolo.h5')
