@@ -1,11 +1,11 @@
-from yolov1_5 import Yolo
+from yolov1_5.models.MyYolo import MyYolo
 from utils.tools import get_class_weight
 from tensorflow.keras.optimizers import Adam
 
-INPUT_SHAPE = (448, 448, 3)
+INPUT_SHAPE_1 = (448, 448, 3)
+INPUT_SHAPE_2 = (128,)
 CLASS_NAMES = ["car"]
 
-yolo = Yolo(INPUT_SHAPE, CLASS_NAMES)
-model = yolo.create_model()
-yolo.model.summary()
-
+myyolo = MyYolo(INPUT_SHAPE_1, INPUT_SHAPE_2, CLASS_NAMES)
+model = myyolo.create_model()
+myyolo.model.summary()

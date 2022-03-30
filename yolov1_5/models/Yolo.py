@@ -4,19 +4,11 @@
 """Yolo V1.5.
 """
 
-__version__ = "3.1"
-__author__ = "Samson Woof"
-
-from os import path
-import sys
-
-sys.path.append(path.join(path.dirname(__file__), '..'))
-
+from yolov1_5.models.darknet import yolo_body, yolo_head
+from yolov1_5.losses import wrap_yolo_loss
+from yolov1_5.metrics import wrap_obj_acc, wrap_mean_iou
+from yolov1_5.metrics import wrap_class_acc, wrap_recall
 from utils import tools
-from .models import yolo_body, my_yolo_body, yolo_head, my_yolo_head
-from .losses import wrap_yolo_loss
-from .metrics import wrap_obj_acc, wrap_mean_iou
-from .metrics import wrap_class_acc, wrap_recall
 
 
 class Acc_type(object):

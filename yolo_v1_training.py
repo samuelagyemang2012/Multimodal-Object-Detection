@@ -1,4 +1,4 @@
-from yolov1_5 import Yolo
+from yolov1_5.models.Yolo import Yolo
 from utils.tools import get_class_weight
 from tensorflow.keras.optimizers import Adam
 
@@ -6,8 +6,8 @@ INPUT_SHAPE = (448, 448, 3)
 CLASS_NAMES = ["car"]
 BATCH_SIZE = 4
 BBOX_NUM = 2
-IMAGES_PATH = "D:/Datasets/resized/images/"
-LABELS_PATH = "D:/Datasets/resized/annotations"
+IMAGES_PATH = "D:/Datasets/infrared_dataset/images/"
+LABELS_PATH = "D:/Datasets/infrared_dataset/annotations/"
 EPOCHS = 50
 
 # Load model
@@ -23,8 +23,6 @@ img, label = yolo.read_file_to_dataset(
 #     LABELS_PATH,
 #     BATCH_SIZE)
 
-# Visualize data
-# yolo.vis_img(img[0], label[0])
 
 # Split data
 test_ = int(len(img) * 0.2)  # 0:150

@@ -1,5 +1,5 @@
 import os
-from yolov1_5 import Yolo
+from yolov1_5.models.Yolo import Yolo
 from utils.tools import decode
 from my_utils import cv2_do_detections, plt_do_detections
 import numpy as np
@@ -10,15 +10,20 @@ image_path = "D:/Datasets/infrared_dataset/images/"
 dest_path = "C:/Users/Sam/Desktop/dd/"
 image_shape = (448, 448, 3)
 classes = ['car']
+classes_num = len(classes)
+threshold = 0.5
+yolo_version = 1
 image_arr = []
 preds = []
 
 # fetch_images
 images = os.listdir(image_path)
 images = images[300:400]
+
 # choice_images = ["1121R-290.jpg", "1121R-287.jpg", "1121R-269.jpg", "1121R-247.jpg", "1121R-246.jpg", "1121R-245.jpg",
 #                  "1121R-244.jpg", "1121R-235.jpg", "1121R-2111.jpg"]
 # images = images + choice_images
+
 # load model
 yolo = Yolo(input_shape=(448, 448, 3), class_names=['car'])
 yolo.create_model(pretrained_weights=model_weight_path)
@@ -39,7 +44,7 @@ decoded_detections = []
 
 # show predictions labels
 for i in range(len(image_arr)):
-    p = decode(detections[i], class_num=1, threshold=0.5, version=1)
+    p = decode(detections[i], class_num=classes_num, threshold=threshold, version=yolo_version)
     decoded_detections.append(p)
     print(p)
     print("")

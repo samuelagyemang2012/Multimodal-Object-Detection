@@ -1,7 +1,8 @@
 from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Conv2D, concatenate, Input, GlobalAveragePooling2D, Flatten, Reshape
+from tensorflow.keras.layers import Dense, Conv2D, concatenate, Input, GlobalAveragePooling2D, Flatten, Reshape, add, \
+    multiply
 from tensorflow.keras.layers import BatchNormalization as BN
-from .backbone import darknet_body, radarnet_body
+from yolov1_5.models.backbone import darknet_body, radarnet_body
 
 
 def darknet(input_shape=(224, 224, 3), class_num=10):
@@ -35,7 +36,7 @@ def yolo_body(input_shape=(448, 448, 3), pretrained_darknet=None):
     return darknet
 
 
-def my_yolo_body(input_shape1, input_shape2, pretrained_darknet=None):
+def my_yolo_body(input_shape1=(448, 448, 3), input_shape2=(128,), pretrained_darknet=None):
     input1 = Input(input_shape1)
     input2 = Input(input_shape2)
 
@@ -66,6 +67,8 @@ def yolo_head(model_body, bbox_num=2, class_num=10):
 
 
 def my_yolo_head(model_body1, model_body2, bbox_num=2, class_num=10):
+    out = (7 * 7 * (bbox_num * 5 + class_num))
+
     inputs1 = model_body1.input
     inputs2 = model_body2.input
 
@@ -77,14 +80,16 @@ def my_yolo_head(model_body1, model_body2, bbox_num=2, class_num=10):
         output1)
     p_output1 = Conv2D(class_num, 1, padding='same', kernel_initializer='he_normal', activation='softmax')(output1)
     outputs1 = concatenate([xywhc_output1, p_output1], axis=3)
+    print(output1.shape)
     # ----------------------------------------------------------
 
-    radar_xywhc = Dense((7 * 7 * (bbox_num * 5 + class_num)), activation='sigmoid')(output2)
+    flatten = Flatten()(output2)
+    radar_xywhc = Dense(out, activation='sigmoid')(flatten)
     outputs2 = Reshape((7, 7, (bbox_num * 5 + class_num)))(radar_xywhc)
-    final_conc = concatenate([outputs1, outputs2])
+    final_conc = add([outputs1, outputs2])
+    # ---------------------------------------------------------
 
     model = Model(inputs=[inputs1, inputs2], outputs=final_conc)
-
     return model
 
     # out_units = (7 * 7 * (bbox_num * 5 + class_num))
