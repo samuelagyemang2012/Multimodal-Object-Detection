@@ -75,7 +75,7 @@ class MyYolo(object):
         Returns:
             A tf.keras Model.
         """
-        d_body, r_body = my_yolo_body(self.input_shape1, self.input_shape2, "")
+        d_body, r_body = my_yolo_body(self.input_shape1, self.input_shape2, pretrained_backbone)
         # Changes made here
         self.model = my_yolo_head(d_body, r_body, bbox_num, self.class_num)
 
@@ -130,7 +130,7 @@ class MyYolo(object):
             img_path=img_path,
             label_path=label_path,
             label_format=label_format,
-            size=self.input_shape[:2],
+            size=self.input_shape1[:2],
             grid_shape=self.grid_shape,
             class_names=self.class_names,
             rescale=rescale,
@@ -192,7 +192,7 @@ class MyYolo(object):
             label_path=label_path,
             batch_size=batch_size,
             label_format=label_format,
-            size=self.input_shape[:2],
+            size=self.input_shape1[:2],
             rescale=rescale,
             preprocessing=preprocessing,
             grid_shape=self.grid_shape,

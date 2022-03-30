@@ -61,9 +61,6 @@ yolo.model.compile(optimizer=Adam(learning_rate=1e-4),
                    metrics=metrics)
 
 # Fit model
-history = yolo.model.fit(
-    img,
-    label,
-    EPOCHS)
+history = yolo.model.fit(img,label,EPOCHS)
 
 prediction = yolo.model.predict(test_img)
