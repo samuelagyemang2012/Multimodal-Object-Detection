@@ -29,7 +29,7 @@ def cv2_do_detections(image_array, decoded_detections, img_width, img_height):
     cv2.waitKey(0)
 
 
-def plt_do_detections(image_array, decoded_detections, img_width, img_height, class_names, dest_path_):
+def plt_do_detections(image_array, decoded_detections, img_width, img_height, class_names, dest_path_, threshold):
     for i, d in enumerate(decoded_detections):
 
         plt.figure(figsize=(20, 12))
@@ -40,9 +40,11 @@ def plt_do_detections(image_array, decoded_detections, img_width, img_height, cl
         for box in d:
             xmin, xmax, ymin, ymax, class_id, conf = yolo_to_pasvoc(img_width, img_height, box)
 
-            label = '{}: {:.2f}'.format(class_names[class_id], conf)
-            current_axis.add_patch(
-                plt.Rectangle((xmin, ymin), xmax - xmin, ymax - ymin, color="red", fill=False, linewidth=1))
-            current_axis.text(xmin, ymin, label, size='x-large', color='white', bbox={'facecolor': "red", 'alpha': 1.0})
+            if conf > threshold:
+                label = '{}: {:.2f}'.format(class_names[class_id], conf)
+                current_axis.add_patch(
+                    plt.Rectangle((xmin, ymin), xmax - xmin, ymax - ymin, color="red", fill=False, linewidth=1))
+                current_axis.text(xmin, ymin, label, size='x-large', color='white',
+                                  bbox={'facecolor': "red", 'alpha': 1.0})
 
-        plt.savefig(dest_path_ + str(i) + ".jpg", dpi=100, bbox_inches="tight")
+            plt.savefig(dest_path_ + str(i) + ".jpg", dpi=100, bbox_inches="tight")
