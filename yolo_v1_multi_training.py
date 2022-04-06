@@ -1,3 +1,5 @@
+import os
+
 from yolov1_5.models.MyYolo import MyYolo
 from tensorflow.keras.utils import to_categorical
 from utils.tools import get_class_weight
@@ -16,7 +18,7 @@ BBOX_NUM = 2
 IMAGES_PATH = "C:/Users/Administrator/Desktop/resized/images/"
 LABELS_PATH = "C:/Users/Administrator/Desktop/resized/annotations/"
 RADAR_PATH = "C:/Users/Administrator/PycharmProjects/radar_classification/data/radar_train_car_only.csv"
-EPOCHS = 100
+EPOCHS = 300
 
 # Load model
 yolo = MyYolo(INPUT_SHAPE_1, INPUT_SHAPE_2, CLASS_NAMES)
@@ -28,7 +30,9 @@ imgs, labels = yolo.read_file_to_dataset(
 
 # Load radar data and labels
 radar_df = pd.read_csv(RADAR_PATH)
+
 radar_data = radar_df['signal'].tolist()
+print(len(radar_data))
 radar_data = radar_data[0:len(labels)]
 radar_data = [np.array(t.replace("[", "").replace("]", "").replace("\n", "").split()).astype(np.float32) for t in
               radar_data]
@@ -43,7 +47,7 @@ for rl in radar_labels:
         radar_labels_enc.append(0)
 
 radar_labels_enc = to_categorical(radar_labels_enc)
-print()
+
 # seq = yolo.read_file_to_sequence(
 #     IMAGES_PATH,
 #     LABELS_PATH,

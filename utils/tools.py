@@ -125,8 +125,7 @@ def read_file(img_path=None,
         path_list = filepaths.flatten()
         return path_list
 
-    def _encode_to_array(img, bbs,
-                         grid_shape, pos, name, labels):
+    def _encode_to_array(img, bbs, grid_shape, pos, name, labels):
         img_data[pos] = img
 
         grid_height = img.shape[0] / grid_shape[0]

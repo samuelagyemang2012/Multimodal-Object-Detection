@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0c9d74a3-f8bb-4a23-bfd4-659014260b69" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/yolo_v1_multi_inference.py" afterDir="false" />
+    <list default="true" id="0c9d74a3-f8bb-4a23-bfd4-659014260b69" name="Changes" comment="Changes">
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/multimoda_yolo_detection-master.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/multimoda_yolo_detection-master.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/my_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/my_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/tools.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yolo_v1_multi_training.py" beforeDir="false" afterPath="$PROJECT_DIR$/yolo_v1_multi_training.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -45,7 +45,7 @@
       <recent name="D:\Pycharm Projects\multimodal_object_detection\yolov1_5\models" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.yolo_v1_multi_inference">
+  <component name="RunManager" selected="Python.yolo_v1_multi_training">
     <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="multimoda_yolo_detection-master" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -132,8 +132,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.yolo_v1_multi_inference" />
         <item itemvalue="Python.yolo_v1_multi_training" />
+        <item itemvalue="Python.yolo_v1_multi_inference" />
         <item itemvalue="Python.test" />
         <item itemvalue="Python.yolo_v1_training" />
       </list>
