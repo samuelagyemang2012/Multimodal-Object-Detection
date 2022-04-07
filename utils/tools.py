@@ -158,10 +158,8 @@ def read_file(img_path=None,
                 label_data[pos, y_i, x_i, 4] = 1
                 label_data[pos, y_i, x_i, 5 + labels[label_i]] = 1
 
-    def _imgaug_to_array(img, bbs,
-                         grid_shape, pos, name, labels):
-        _encode_to_array(img, bbs,
-                         grid_shape, pos, name, labels)
+    def _imgaug_to_array(img, bbs, grid_shape, pos, name, labels):
+        _encode_to_array(img, bbs, grid_shape, pos, name, labels)
         if augmenter is not None:
             for aug_i in range(1, aug_times):
                 img_aug, bbs_aug = augmenter(image=img,
@@ -240,8 +238,7 @@ def read_file(img_path=None,
             _imgaug_to_array(img, bbs,
                              grid_shape, pos, name, labels)
 
-    if (label_format == "labelme"
-            and (img_path is None or label_path is None)):
+    if label_format == "labelme" and (img_path is None or label_path is None):
         if label_path is None:
             label_path = img_path
             img_path = None
@@ -250,17 +247,15 @@ def read_file(img_path=None,
     else:
         path_list = os.listdir(img_path)
         path_list = [f for f in path_list if not f.startswith(".")]
+
     path_list_len = len(path_list)
 
     class_num = len(class_names)
     if augmenter is None:
         aug_times = 1
 
-    img_data = np.empty((path_list_len * aug_times,
-                         *size, 3))
-    label_data = np.zeros((path_list_len * aug_times,
-                           *grid_shape,
-                           5 + class_num))
+    img_data = np.empty((path_list_len * aug_times, *size, 3))
+    label_data = np.zeros((path_list_len * aug_times, *grid_shape, 5 + class_num))
 
     threads = []
     workers_num = ceil(path_list_len / thread_num)
@@ -416,14 +411,10 @@ class YoloDataSequence(Sequence):
                 y_i = int(y // grid_height)  # Grid y coordinate
 
                 if x_i < grid_shape[1] and y_i < grid_shape[0]:
-                    label_data[pos, y_i, x_i, 0] = (
-                            x % grid_width / grid_width)
-                    label_data[pos, y_i, x_i, 1] = (
-                            y % grid_height / grid_height)
-                    label_data[pos, y_i, x_i, 2] = (
-                            w / img_width)
-                    label_data[pos, y_i, x_i, 3] = (
-                            h / img_height)
+                    label_data[pos, y_i, x_i, 0] = (x % grid_width / grid_width)
+                    label_data[pos, y_i, x_i, 1] = (y % grid_height / grid_height)
+                    label_data[pos, y_i, x_i, 2] = (w / img_width)
+                    label_data[pos, y_i, x_i, 3] = (h / img_height)
                     label_data[pos, y_i, x_i, 4] = 1
                     label_data[pos, y_i, x_i, 5 + labels[label_i]] = 1
 
@@ -923,8 +914,7 @@ def nms(xywhcp, class_num=1, nms_threshold=0.5):
     return xywhcp
 
 
-def soft_nms(xywhcp, class_num=1,
-             nms_threshold=0.5, conf_threshold=0.5, sigma=0.5):
+def soft_nms(xywhcp, class_num=1, nms_threshold=0.5, conf_threshold=0.5, sigma=0.5):
     """Soft Non-Maximum Suppression.
 
     Args:

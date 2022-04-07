@@ -1,5 +1,8 @@
 import cv2
+import glob
+import pandas as pd
 from matplotlib import pyplot as plt
+import xml.etree.ElementTree as ET
 
 
 def yolo_to_pasvoc(img_width, img_height, box):
@@ -48,3 +51,36 @@ def plt_do_detections(image_array, decoded_detections, img_width, img_height, cl
                                   bbox={'facecolor': "red", 'alpha': 1.0})
 
             plt.savefig(dest_path_ + str(i) + ".jpg", dpi=100, bbox_inches="tight")
+
+
+def xml_to_csv(path, dest_path, classes):
+    xml_list = []
+    for xml_file in glob.glob(path + '/*.xml'):
+        tree = ET.parse(xml_file)
+        root = tree.getroot()
+        for member in root.findall('object'):
+            bbx = member.find('bndbox')
+            xmin = int(bbx.find('xmin').text)
+            ymin = int(bbx.find('ymin').text)
+            xmax = int(bbx.find('xmax').text)
+            ymax = int(bbx.find('ymax').text)
+            label = member.find('name').text
+            class_id = classes.index(label) + 1
+
+            value = (root.find('filename').text,
+                     # int(root.find('size')[0].text),
+                     # int(root.find('size')[1].text),
+                     xmin,
+                     ymin,
+                     xmax,
+                     ymax,
+                     class_id
+                     )
+            xml_list.append(value)
+    column_name = ['image', 'xmin', 'ymin', 'xmax', 'ymax', 'class_id']
+    xml_df = pd.DataFrame(xml_list, columns=column_name)
+    xml_df.to_csv(dest_path, index=False)
+
+
+xml_to_csv("C:/Users/Administrator/Desktop/resized/annotations/",
+           "C:/Users/Administrator/Desktop/resized/annotations.csv", ["car"])
