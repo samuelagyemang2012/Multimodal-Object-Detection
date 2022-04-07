@@ -17,8 +17,8 @@ def yolo_to_pasvoc(img_width, img_height, box):
     return int(xmin), int(xmax), int(ymin), int(ymax), int(class_id), round(conf, 2)
 
 
-def cv2_draw_box(img_array, x1, x2, y1, y2, color):
-    img = cv2.rectangle(img_array, (x1, y1), (x2, y2), color, 2)
+def cv2_draw_box(img_array, xmin, ymin, xmax, ymax, color, line_width):
+    img = cv2.rectangle(img_array, (xmin, ymin), (xmax, ymax), color, line_width)
     return img
 
 
@@ -26,7 +26,7 @@ def cv2_draw_box(img_array, x1, x2, y1, y2, color):
 def cv2_do_detections(image_array, decoded_detections, img_width, img_height):
     for i, box in enumerate(decoded_detections):
         xmin, xmax, ymin, ymax, class_id, conf = yolo_to_pasvoc(img_width, img_height, box)
-        image_array = cv2_draw_box(image_array, xmin, xmax, ymin, ymax, (0, 0, 255))
+        image_array = cv2_draw_box(image_array, xmin, xmax, ymin, ymax, (0, 0, 255), 1)
 
     cv2.imshow("", image_array)
     cv2.waitKey(0)
@@ -82,5 +82,34 @@ def xml_to_csv(path, dest_path, classes):
     xml_df.to_csv(dest_path, index=False)
 
 
-xml_to_csv("C:/Users/Administrator/Desktop/resized/annotations/",
-           "C:/Users/Administrator/Desktop/resized/annotations.csv", ["car"])
+def resize_bbox(bbox, in_size, out_size):
+    """Resize bounding boxes according to image resize.
+    Args:
+        bbox (~numpy.ndarray): See the table below.
+        in_size (tuple): A tuple of length 2. The height and the width
+            of the image before resized.
+        out_size (tuple): A tuple of length 2. The height and the width
+            of the image after resized.
+    .. csv-table::
+        xmin,ymin,xmax,ymax
+    Returns:
+        ~numpy.ndarray:
+        Bounding boxes rescaled according to the given image shapes.
+    """
+
+    # 0-ymin, 1-xmin, 2-ymax, 3-xmax
+    # 1-ymin, 0-xmin, 3-ymax, 2-xmax - ours
+
+    bbox = bbox.copy()
+    y_scale = float(out_size[0]) / in_size[0]
+    x_scale = float(out_size[1]) / in_size[1]
+
+    bbox[1] = y_scale * bbox[1]
+    bbox[3] = y_scale * bbox[3]
+
+    bbox[0] = x_scale * bbox[0]
+    bbox[2] = x_scale * bbox[2]
+    return bbox
+
+# xml_to_csv("C:/Users/Administrator/Desktop/resized/annotations/",
+#            "C:/Users/Administrator/Desktop/resized/annotations.csv", ["car"])

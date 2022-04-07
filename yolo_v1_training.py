@@ -25,7 +25,6 @@ seq = yolo.read_file_to_sequence(
     LABELS_PATH,
     BATCH_SIZE)
 
-
 # Split data
 test_ = int(len(imgs) * 0.2)  # 0:150
 val_ = int(len(imgs) * 0.1)  # 150: 150 +75
