@@ -13,8 +13,8 @@ def read_data(image_path_, label_, grid_size, num_classes):
     image_arr = image_arr / 255.
     label_matrix = np.zeros([grid_size, grid_size, num_classes + 5])
 
-    for l in label_:
-        # get bbox
+    for i, l in enumerate(label_):
+        # print(label_)
         x = (l[0] + l[1]) / 2 / img_w
         y = (l[2] + l[3]) / 2 / img_h
         w = (l[1] - l[0]) / img_w
@@ -36,28 +36,34 @@ def read_data(image_path_, label_, grid_size, num_classes):
     return image_arr, label_matrix
 
 
-def prepare_data(csv_path, image_folder, grid_size, num_classes):
+def prepare_data(csv_path, image_folder, grid_size, num_classes, columns):  # columns[xmin,ymin,xmax,ymax,class]
     df = pd.read_csv(csv_path)
-    images = df['image'].unique().tolist()
+    images = df[columns[0]].unique().tolist()
     imgs = []
     labels = []
     names = []
 
-    for i in images:
+    for n, i in enumerate(images):
         names.append(i)
         image_path = image_folder + i
-        bbox = df[df['image'] == i]
-        bbox = bbox[["xmin", "ymin", "xmax", "ymax", "class_id"]].to_numpy()
+        # print(image_path)
+
+        # bbox = df[df['image'] == i]
+        bbox = df[df[columns[0]] == i]
+
+        # bbox = bbox[["xmin", "ymin", "xmax", "ymax", "class_id"]].to_numpy()
+        bbox = bbox[columns[1:6]].to_numpy()
+        bbox = bbox.astype(int)
+
         img_, label_ = read_data(image_path, bbox, grid_size, num_classes)
         imgs.append(img_)
         labels.append(label_)
 
     return np.array(imgs), np.array(labels), names
 
-# data_path = "C:/Users/Administrator/Desktop/Self Driving Cars/labels_train.csv"
-# image_base = "C:/Users/Administrator/Desktop/Self Driving Cars/images/"
+# data_path = "C:/Users/Administrator/Desktop/cars_resized/all.csv"
+# image_base = "C:/Users/Administrator/Desktop/cars_resized/images/"
 #
-#
-# images, labels = prepare_data(data_path, image_base, 7, 5)
+# images, labels, names = prepare_data(data_path, image_base, 7, 1, ['file', "x1", "y1", "x2", "y2", "class"])
 # print(images.shape)
 # print(labels.shape)

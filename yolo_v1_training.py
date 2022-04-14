@@ -1,6 +1,7 @@
 from yolov1_5.models.Yolo import Yolo
 from utils.tools import get_class_weight
 from utils.data_loader import prepare_data
+from utils.measurement import PR_func
 from tensorflow.keras.optimizers import Adam
 
 INPUT_SHAPE = (448, 448, 3)
@@ -8,22 +9,18 @@ CLASS_NAMES = ["car"]
 CLASS_NUM = len(CLASS_NAMES)
 BATCH_SIZE = 4
 BBOX_NUM = 2
-IMAGES_PATH = "C:/Users/Administrator/Desktop/resized/images/"
-CSV_PATH = "C:/Users/Administrator/Desktop/resized/annotations.csv"
-LABELS_PATH = "C:/Users/Administrator/Desktop/resized/annotations/"
-EPOCHS = 50
+IMAGES_PATH = "C:/Users/Administrator/Desktop/cars_resized/images/"
+CSV_PATH = "C:/Users/Administrator/Desktop/cars_resized/all.csv"
+COLUMNS = ['file', "x1", "y1", "x2", "y2", 'class']
+# LABELS_PATH = "C:/Users/Administrator/Desktop/resized/annotations/"
+EPOCHS = 10
 
 # Load model
 yolo = Yolo(INPUT_SHAPE, CLASS_NAMES)
 
 # Load data
 # imgs, labels = yolo.read_file_to_dataset(IMAGES_PATH, LABELS_PATH)
-imgs, labels, filenames = prepare_data(CSV_PATH, IMAGES_PATH, 7, CLASS_NUM)
-
-seq = yolo.read_file_to_sequence(
-    IMAGES_PATH,
-    LABELS_PATH,
-    BATCH_SIZE)
+imgs, labels, filenames = prepare_data(CSV_PATH, IMAGES_PATH, 7, CLASS_NUM, COLUMNS)
 
 # Split data
 test_ = int(len(imgs) * 0.2)  # 0:150
@@ -64,4 +61,8 @@ yolo.model.compile(optimizer=Adam(learning_rate=1e-4),
 # Fit model
 history = yolo.model.fit(imgs, labels, EPOCHS)
 
+# Save model
+yolo.model.save('C:/Users/Administrator/Desktop/cars_resized/saved_model/yolo_model.h5')
+
+# print(PR_func.get_map(mode="voc2012")
 # prediction = yolo.model.predict(test_img)

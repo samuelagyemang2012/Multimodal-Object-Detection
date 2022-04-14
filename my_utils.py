@@ -111,5 +111,44 @@ def resize_bbox(bbox, in_size, out_size):
     bbox[2] = x_scale * bbox[2]
     return bbox
 
-# xml_to_csv("C:/Users/Administrator/Desktop/resized/annotations/",
-#            "C:/Users/Administrator/Desktop/resized/annotations.csv", ["car"])
+
+def resize_data(size, image_folder, annotation_path, columns, dest_image_folder,
+                dest_ann_path, limit):  # columns format(image file, xmin,ymin,xmax,ymax)
+    new_bboxes = []
+    df = pd.read_csv(annotation_path)
+    images = df[columns[0]].tolist()
+    bbox = df[columns[1:5]].to_numpy()
+    classes = df[columns[5]].tolist()
+
+    for i in range(limit):
+        img_path = image_folder + images[i]
+        img_array = cv2.imread(img_path)
+        h, w, c = img_array.shape
+        img_array = cv2.resize(img_array, size, interpolation=cv2.INTER_AREA)
+        cv2.imwrite(dest_image_folder + images[i], img_array)
+        new_bbox = resize_bbox(bbox[i], (h, w), size)
+        new_bboxes.append([images[i], new_bbox[0], new_bbox[1], new_bbox[2], new_bbox[3], classes[i]])
+
+    new_df = pd.DataFrame(new_bboxes, columns=['file', 'x1', 'y1', 'x2', 'y2', 'class'])
+    new_df.to_csv(dest_ann_path, index=False)
+
+
+image_folder_ = "C:/Users/Administrator/Desktop/datasets/cars/cars_train/"
+annotation_path_ = "C:/Users/Administrator/Desktop/datasets/cars/cars_annotations_train.csv"
+dest_image_folder_ = "C:/Users/Administrator/Desktop/cars_resized/images/"
+dest_ann_path_ = "C:/Users/Administrator/Desktop/cars_resized/"
+columns_ = ["file", "x1", "y1", "x2", "y2", "class"]
+size_ = (448, 448)
+
+resize_data(size_, image_folder_, annotation_path_, columns_, dest_image_folder_, dest_ann_path_ + "all.csv", 2000)
+
+# # Draw boxes
+# tdf = pd.read_csv(dest_ann_folder_ + "test.csv")
+# images = tdf['file'].tolist()
+# bb = tdf[["x1", "y1", "x2", "y2"]].to_numpy()
+#
+# for i in range(len(images)):
+#     img = cv2.imread(dest_image_folder_ + images[i])
+#     img = cv2_draw_box(img, bb[i][0], bb[i][1], bb[i][2], bb[i][3], (0, 255, 0), 1)
+#     cv2.imshow("", img)
+#     cv2.waitKey(0)
