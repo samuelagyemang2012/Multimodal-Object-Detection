@@ -36,6 +36,44 @@ def read_data(image_path_, label_, grid_size, num_classes):
     return image_arr, label_matrix
 
 
+def read_data2(image_path_, label_, grid_size, num_classes):
+    image_arr = cv2.imread(image_path_)
+    img_h, img_w, img_c = image_arr.shape
+    # image_arr = cv2.cvtColor(image_arr, cv2.COLOR_BGR2RGB)
+    image_arr = np.array(image_arr, dtype='float32')
+    image_arr = image_arr / 255.
+    label_matrix = np.zeros([grid_size, grid_size, num_classes + 5])
+
+    for i, l in enumerate(label_):
+        # print(label_)
+        x = (l[0] + l[1]) / 2 / img_w
+        y = (l[2] + l[3]) / 2 / img_h
+        w = (l[1] - l[0]) / img_w
+        h = (l[3] - l[2]) / img_h
+        cls = l[4]
+
+        i, j = int(grid_size * y, grid_size * x)
+        x_cell, y_cell = int(grid_size * x - j, grid_size * y - i)
+
+        width_cell, height_cell = (
+            w * grid_size,
+            h * grid_size,
+        )
+
+        # y = loc[1] - loc_i
+        # x = loc[0] - loc_j
+
+        if label_matrix[i, j, num_classes] == 0:
+            label_matrix[i, j, num_classes] = 1
+
+            box_coors = np.array([x_cell, y_cell, width_cell, height_cell])
+
+            label_matrix[i, j, num_classes + 1:num_classes + 5] = box_coors
+            label_matrix[i, j, cls] = 1
+
+    return image_arr, label_matrix
+
+
 def prepare_data(csv_path, image_folder, grid_size, num_classes, columns):  # columns[xmin,ymin,xmax,ymax,class]
     df = pd.read_csv(csv_path)
     images = df[columns[0]].unique().tolist()
