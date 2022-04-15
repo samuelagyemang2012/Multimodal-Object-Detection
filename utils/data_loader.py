@@ -52,8 +52,8 @@ def read_data2(image_path_, label_, grid_size, num_classes):
         h = (l[3] - l[2]) / img_h
         cls = l[4]
 
-        i, j = int(grid_size * y, grid_size * x)
-        x_cell, y_cell = int(grid_size * x - j, grid_size * y - i)
+        i, j = int(grid_size * y), int(grid_size * x)
+        x_cell, y_cell = grid_size * x - j, grid_size * y - i
 
         width_cell, height_cell = (
             w * grid_size,

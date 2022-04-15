@@ -9,11 +9,12 @@ CLASS_NAMES = ["car"]
 CLASS_NUM = len(CLASS_NAMES)
 BATCH_SIZE = 4
 BBOX_NUM = 2
-IMAGES_PATH = "C:/Users/Administrator/Desktop/cars_resized/images/"
-CSV_PATH = "C:/Users/Administrator/Desktop/cars_resized/all.csv"
-COLUMNS = ['file', "x1", "y1", "x2", "y2", 'class']
-# LABELS_PATH = "C:/Users/Administrator/Desktop/resized/annotations/"
-EPOCHS = 10
+IMAGES_PATH = "C:/Users/Administrator/Desktop/resized/images/"  # "C:/Users/Administrator/Desktop/cars_resized/images/"
+CSV_PATH = "C:/Users/Administrator/Desktop/resized/annotations_1.csv"  # "C:/Users/Administrator/Desktop/cars_resized/all.csv"
+COLUMNS = ['image', "xmin", "ymin", "xmax", "ymax", 'class_id']  # ['file', "x1", "y1", "x2", "y2", 'class']
+# COLUMNS =
+LABELS_PATH = "C:/Users/Administrator/Desktop/resized/annotations_1/"
+EPOCHS = 1
 
 # Load model
 yolo = Yolo(INPUT_SHAPE, CLASS_NAMES)
@@ -52,6 +53,8 @@ binary_weight = get_class_weight(
     method='binary'
 )
 
+print(binary_weight)
+
 loss = yolo.loss(binary_weight)
 metrics = yolo.metrics("obj+iou+recall0.5")
 yolo.model.compile(optimizer=Adam(learning_rate=1e-4),
@@ -62,7 +65,7 @@ yolo.model.compile(optimizer=Adam(learning_rate=1e-4),
 history = yolo.model.fit(imgs, labels, EPOCHS)
 
 # Save model
-yolo.model.save('C:/Users/Administrator/Desktop/cars_resized/saved_model/yolo_model.h5')
+yolo.model.save('C:/Users/Administrator/Desktop/yolo_model.h5')
 
 # print(PR_func.get_map(mode="voc2012")
 # prediction = yolo.model.predict(test_img)
