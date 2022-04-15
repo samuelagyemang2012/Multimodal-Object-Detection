@@ -147,14 +147,11 @@ def read_file(img_path=None,
                     # Detect whether objects overlap
                     print("Notice! Repeat!:", name, y_i, x_i)
 
-                label_data[pos, y_i, x_i, 0] = (
-                        x % grid_width / grid_width)
-                label_data[pos, y_i, x_i, 1] = (
-                        y % grid_height / grid_height)
-                label_data[pos, y_i, x_i, 2] = (
-                        w / img_width)
-                label_data[pos, y_i, x_i, 3] = (
-                        h / img_height)
+                label_data[pos, y_i, x_i, 0] = (x % grid_width / grid_width)
+                label_data[pos, y_i, x_i, 1] = (y % grid_height / grid_height)
+                label_data[pos, y_i, x_i, 2] = (w / img_width)
+                label_data[pos, y_i, x_i, 3] = (h / img_height)
+
                 label_data[pos, y_i, x_i, 4] = 1
                 label_data[pos, y_i, x_i, 5 + labels[label_i]] = 1
 
