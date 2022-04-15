@@ -93,7 +93,7 @@ def prepare_data(csv_path, image_folder, grid_size, num_classes, columns):  # co
         bbox = bbox[columns[1:6]].to_numpy()
         bbox = bbox.astype(int)
 
-        img_, label_ = read_data(image_path, bbox, grid_size, num_classes)
+        img_, label_ = read_data2(image_path, bbox, grid_size, num_classes)
         imgs.append(img_)
         labels.append(label_)
 
