@@ -91,7 +91,9 @@ class Yolo(object):
             aug_times=1,
             shuffle=True, seed=None,
             encoding="big5",
+            # columns=["image", "xmin", "ymin", "xmax", "ymax"],
             thread_num=10):
+
         """Read the images and annotaions
         created by labelimg or labelme as ndarray.
 
@@ -123,21 +125,31 @@ class Yolo(object):
             - shape of img: (batch_size, img_heights, img_widths, channel)
             - shape of label: (batch_size, grid_heights, grid_widths, info)
         """
-        img_data, label_data, path_list = tools.read_file(
+
+        # img_data, label_data, path_list = tools.read_file(
+        #     img_path=img_path,
+        #     label_path=label_path,
+        #     label_format=label_format,
+        #     size=self.input_shape[:2],
+        #     grid_shape=self.grid_shape,
+        #     class_names=self.class_names,
+        #     rescale=rescale,
+        #     preprocessing=preprocessing,
+        #     augmenter=augmenter,
+        #     aug_times=aug_times,
+        #     shuffle=shuffle, seed=seed,
+        #     encoding=encoding,
+        #     thread_num=thread_num)
+
+        img_data, label_data = tools.read_file2(
             img_path=img_path,
             label_path=label_path,
-            label_format=label_format,
             size=self.input_shape[:2],
             grid_shape=self.grid_shape,
             class_names=self.class_names,
-            rescale=rescale,
-            preprocessing=preprocessing,
-            augmenter=augmenter,
-            aug_times=aug_times,
-            shuffle=shuffle, seed=seed,
-            encoding=encoding,
-            thread_num=thread_num)
-        self.file_names = path_list
+            encoding=encoding)
+
+        # self.file_names = path_list
 
         return img_data, label_data
 

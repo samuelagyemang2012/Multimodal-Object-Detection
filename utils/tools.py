@@ -3,7 +3,7 @@
 
 """Utilities and tools for Yolo.
 """
-
+import cv2
 from PIL import Image
 import base64
 import matplotlib.pyplot as plt
@@ -22,6 +22,7 @@ from numpy.core.fromnumeric import argmax
 from tensorflow.keras.utils import Sequence
 import pandas as pd
 import xml.etree.ElementTree as ET
+import pandas as pd
 
 epsilon = 1e-07
 
@@ -389,8 +390,7 @@ class YoloDataSequence(Sequence):
         if idx >= self.__len__():
             raise IndexError("Sequence index out of range")
 
-        def _encode_to_array(img, bbs,
-                             grid_shape, pos, labels):
+        def _encode_to_array(img, bbs, grid_shape, pos, labels):
             img_data[pos] = img
 
             grid_height = img.shape[0] / grid_shape[0]
@@ -415,8 +415,7 @@ class YoloDataSequence(Sequence):
                     label_data[pos, y_i, x_i, 4] = 1
                     label_data[pos, y_i, x_i, 5 + labels[label_i]] = 1
 
-        def _imgaug_to_array(img, bbs,
-                             grid_shape, pos, labels):
+        def _imgaug_to_array(img, bbs, grid_shape, pos, labels):
             if self.augmenter is None:
                 _encode_to_array(img, bbs,
                                  grid_shape, pos, labels)
@@ -753,7 +752,7 @@ def vis_img(img,
 
         point_min = int(x - w / 2), int(y - h / 2)
         # point_max = int(x + w/2), int(y + h/2)
-        print(int(x), int(y))
+
         cir = Circle((x, y),
                      radius=point_radius,
                      color=point_color[class_i])
@@ -1140,3 +1139,85 @@ def array_to_xml(path,
 
     with open(path, "wb") as files:
         tree.write(files)
+
+
+def read_file2(img_path=None,
+               label_path=None,
+               size=(448, 448),
+               grid_shape=(7, 7),
+               class_names=[],
+               encoding="big5"):
+    def _process_paths(csv_path):
+        df = pd.read_csv(csv_path)
+        images = df["image"].unique().tolist()
+        classes = df["class_id"].unique().tolist()
+        return df, images, len(classes)
+
+    def _encode_to_array(img, bbs, grid_shape, pos, name, labels):
+        img_data[pos] = img
+
+        grid_height = img.shape[0] / grid_shape[0]
+        grid_width = img.shape[1] / grid_shape[1]
+        img_height = img.shape[0]
+        img_width = img.shape[1]
+
+        for label_i, box in enumerate(bbs.bounding_boxes):
+            x = (box.x1 + (box.x2 - box.x1) / 2)
+            y = (box.y1 + (box.y2 - box.y1) / 2)
+            w = (box.x2 - box.x1)
+            h = (box.y2 - box.y1)
+
+            x_i = int(x // grid_width)  # Grid x coordinate
+            y_i = int(y // grid_height)  # Grid y coordinate
+
+            if x_i < grid_shape[1] and y_i < grid_shape[0]:
+                if label_data[pos, y_i, x_i, 4] == 1:
+                    # Detect whether objects overlap
+                    print("Notice! Repeat!:", name, y_i, x_i)
+
+                label_data[pos, y_i, x_i, 0] = (x % grid_width / grid_width)
+                label_data[pos, y_i, x_i, 1] = (y % grid_height / grid_height)
+                label_data[pos, y_i, x_i, 2] = (w / img_width)
+                label_data[pos, y_i, x_i, 3] = (h / img_height)
+
+                label_data[pos, y_i, x_i, 4] = 1
+                # label_data[pos, y_i, x_i, 5 + labels[label_i]] = 1
+                label_data[pos, y_i, x_i, 5 + (box.label - 1)] = 1
+
+    def _imgaug_to_array(img, bbs, grid_shape, pos, name, labels):
+        _encode_to_array(img, bbs, grid_shape, pos, name, labels)
+
+    def _read_labelimg2(frame, image_folder, image_list):
+        labels = []
+
+        for n, im in enumerate(image_list):
+            img_ = cv2.imread(image_folder + im)
+            img_ = np.array(img_)
+            img_ = np.array(img_, dtype='float32')
+            img_ = img_ / 255.
+
+            bbox = frame[frame["image"] == im]
+            bbox = bbox[["xmin", "ymin", "xmax", "ymax", "class_id"]].to_numpy()
+            bbox = bbox.astype(int)
+
+            bbs = []
+            for b in bbox:
+                xmin = b[0]
+                ymin = b[1]
+                xmax = b[2]
+                ymax = b[3]
+                cls = b[4]
+
+                labels.append(cls)
+                bbs.append(BoundingBox(x1=xmin, y1=ymin, x2=xmax, y2=ymax, label=cls))
+
+            bbs = BoundingBoxesOnImage(bbs, shape=img_.shape)
+            _imgaug_to_array(img_, bbs, grid_shape, n, im, labels)
+
+    frame, images, num_classes = _process_paths(label_path)
+    img_data = np.empty((len(images), size[0], size[1], 3))
+    label_data = np.zeros((len(images), grid_shape[0], grid_shape[1], 5 + num_classes))
+
+    _read_labelimg2(frame, img_path, images)
+
+    return img_data, label_data  # , path_list
