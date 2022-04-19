@@ -4,4 +4,4 @@
 .vscode
 .DS_Store
 __pycache__
-.idea
+/.idea
