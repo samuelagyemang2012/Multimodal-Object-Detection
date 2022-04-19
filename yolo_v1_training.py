@@ -5,12 +5,12 @@ from utils.measurement import PR_func
 from tensorflow.keras.optimizers import Adam
 
 INPUT_SHAPE = (448, 448, 3)
-CLASS_NAMES = ["car"]
+CLASS_NAMES = ["car", "person"]
 CLASS_NUM = len(CLASS_NAMES)
 BATCH_SIZE = 4
 BBOX_NUM = 2
 IMAGES_PATH = "D:/Datasets/infrared_dataset/resized/images/"  # "C:/Users/Administrator/Desktop/cars_resized/images/"
-CSV_PATH = "D:/Datasets/infrared_dataset/resized/annotations_1.csv"  # "C:/Users/Administrator/Desktop/cars_resized/all.csv"
+CSV_PATH = "D:/Datasets/infrared_dataset/resized/annotations_2.csv"  # "C:/Users/Administrator/Desktop/cars_resized/all.csv"
 COLUMNS = ['image', "xmin", "ymin", "xmax", "ymax", 'class_id']  # ['file', "x1", "y1", "x2", "y2", 'class']
 # COLUMNS =
 LABELS_PATH = "D:/Datasets/infrared_dataset/resized/annotations_1/"

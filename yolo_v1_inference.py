@@ -6,10 +6,10 @@ import numpy as np
 import cv2
 
 model_weight_path = "D:/Datasets/infrared_dataset/trained_models/inf.h5"
-image_path = "D:/Datasets/infrared_dataset/images/"
-dest_path = "C:/Users/Sam/Desktop/dd/"
+image_path = "D:/Datasets/infrared_dataset/resized/images/"
+dest_path = "C:/Users/Sam/Desktop/xxx/my detections/"
 image_shape = (448, 448, 3)
-classes = ['car']
+classes = ['car', "person"]
 classes_num = len(classes)
 threshold = 0.5
 yolo_version = 1
@@ -25,7 +25,7 @@ images = images[300:400]
 # images = images + choice_images
 
 # load model
-yolo = Yolo(input_shape=(448, 448, 3), class_names=['car'])
+yolo = Yolo(input_shape=(448, 448, 3), class_names=['car', 'person'])
 yolo.create_model(pretrained_weights=model_weight_path)
 
 # fetch images from path
@@ -54,4 +54,4 @@ for i in range(len(image_arr)):
 #     cv2_do_detections(image_arr[i], decoded_detections[i], image_shape[0], image_shape[1])
 
 # show bbox in images with plt
-plt_do_detections(image_arr, decoded_detections, image_shape[0], image_shape[1], classes, dest_path)
+plt_do_detections(image_arr, decoded_detections, image_shape[0], image_shape[1], classes, dest_path, threshold)

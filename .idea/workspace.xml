@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="0c9d74a3-f8bb-4a23-bfd4-659014260b69" name="Changes" comment="Changes">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/multimoda_yolo_detection-master.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/multimoda_yolo_detection-master.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/tools.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils/tools.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/my_utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/my_utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yolo_v1_inference.py" beforeDir="false" afterPath="$PROJECT_DIR$/yolo_v1_inference.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yolo_v1_training.py" beforeDir="false" afterPath="$PROJECT_DIR$/yolo_v1_training.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yolov1_5/models/Yolo.py" beforeDir="false" afterPath="$PROJECT_DIR$/yolov1_5/models/Yolo.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,7 +53,7 @@
       <recent name="D:\Pycharm Projects\multimodal_object_detection\yolov1_5\models" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.yolo_v1_training">
+  <component name="RunManager" selected="Python.yolo_v1_inference">
     <configuration name="data_loader" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="multimoda_yolo_detection-master" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -118,7 +117,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="yolo_v1_multi_training" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="yolo_v1_inference" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="multimoda_yolo_detection-master" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -130,7 +129,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/yolo_v1_multi_training.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/yolo_v1_inference.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -162,11 +161,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.yolo_v1_inference" />
+        <item itemvalue="Python.test" />
         <item itemvalue="Python.yolo_v1_training" />
         <item itemvalue="Python.data_loader" />
         <item itemvalue="Python.my_utils" />
-        <item itemvalue="Python.test" />
-        <item itemvalue="Python.yolo_v1_multi_training" />
       </list>
     </recent_temporary>
   </component>

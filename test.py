@@ -16,10 +16,9 @@ import pandas as pd
 import cv2
 from my_utils import cv2_draw_box
 
-image_base = "C:/Users/Administrator/Desktop/resized/images/"
-# image_base = "C:/Users/Administrator/Desktop/data_all/car_voc/VOCdevkit/VOC2012/JPEGImages/"
-data_path = "C:/Users/Administrator/Desktop/resized/annotations_3.csv"
-image_name = "1501R-2085.jpg"
+image_base = "D:/Datasets/infrared_dataset/resized/images/"
+data_path = "D:/Datasets/infrared_dataset/resized/annotations_2.csv"
+image_name = "1139R-1020.jpg"  # "1501R-2085.jpg"
 
 df = pd.read_csv(data_path)
 bb = df[df['image'] == image_name]

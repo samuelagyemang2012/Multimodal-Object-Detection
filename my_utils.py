@@ -33,6 +33,7 @@ def cv2_do_detections(image_array, decoded_detections, img_width, img_height):
 
 
 def plt_do_detections(image_array, decoded_detections, img_width, img_height, class_names, dest_path_, threshold):
+    colors = ["#ED457B", "#1E6AC2", "#F28544", "#1DFA51", "#EDDC15"]
     for i, d in enumerate(decoded_detections):
 
         plt.figure(figsize=(20, 12))
@@ -46,9 +47,10 @@ def plt_do_detections(image_array, decoded_detections, img_width, img_height, cl
             if conf > threshold:
                 label = '{}: {:.2f}'.format(class_names[class_id], conf)
                 current_axis.add_patch(
-                    plt.Rectangle((xmin, ymin), xmax - xmin, ymax - ymin, color="red", fill=False, linewidth=1))
+                    plt.Rectangle((xmin, ymin), xmax - xmin, ymax - ymin, color=colors[class_id], fill=False,
+                                  linewidth=1))
                 current_axis.text(xmin, ymin, label, size='x-large', color='white',
-                                  bbox={'facecolor': "red", 'alpha': 1.0})
+                                  bbox={'facecolor': colors[class_id], 'alpha': 1.0})
 
             plt.savefig(dest_path_ + str(i) + ".jpg", dpi=100, bbox_inches="tight")
 
@@ -132,15 +134,14 @@ def resize_data(size, image_folder, annotation_path, columns, dest_image_folder,
     new_df = pd.DataFrame(new_bboxes, columns=['file', 'x1', 'y1', 'x2', 'y2', 'class'])
     new_df.to_csv(dest_ann_path, index=False)
 
-
-image_folder_ = "C:/Users/Administrator/Desktop/datasets/cars/cars_train/"
-annotation_path_ = "C:/Users/Administrator/Desktop/datasets/cars/cars_annotations_train.csv"
-dest_image_folder_ = "C:/Users/Administrator/Desktop/cars_resized/images/"
-dest_ann_path_ = "C:/Users/Administrator/Desktop/cars_resized/"
-columns_ = ["file", "x1", "y1", "x2", "y2", "class"]
-size_ = (448, 448)
-
-resize_data(size_, image_folder_, annotation_path_, columns_, dest_image_folder_, dest_ann_path_ + "all.csv", 2000)
+# image_folder_ = "C:/Users/Administrator/Desktop/datasets/cars/cars_train/"
+# annotation_path_ = "C:/Users/Administrator/Desktop/datasets/cars/cars_annotations_train.csv"
+# dest_image_folder_ = "C:/Users/Administrator/Desktop/cars_resized/images/"
+# dest_ann_path_ = "C:/Users/Administrator/Desktop/cars_resized/"
+# columns_ = ["file", "x1", "y1", "x2", "y2", "class"]
+# size_ = (448, 448)
+#
+# resize_data(size_, image_folder_, annotation_path_, columns_, dest_image_folder_, dest_ann_path_ + "all.csv", 2000)
 
 # # Draw boxes
 # tdf = pd.read_csv(dest_ann_folder_ + "test.csv")
