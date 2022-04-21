@@ -11,6 +11,7 @@ BATCH_SIZE = 4
 BBOX_NUM = 2
 IMAGES_PATH = "C:/Users/Administrator/Desktop/cars_resized/images/"
 CSV_PATH = "C:/Users/Administrator/Desktop/cars_resized/all.csv"
+# LABELS_PATH = "C:/Users/Administrator/Desktop/resized/annotations_1/"
 COLUMNS = ['image', "xmin", "ymin", "xmax", "ymax", 'class_id']
 EPOCHS = 1
 
@@ -19,6 +20,7 @@ yolo = Yolo(INPUT_SHAPE, CLASS_NAMES)
 
 # Load data
 imgs, labels = yolo.read_file_to_dataset_csv(IMAGES_PATH, CSV_PATH, is_RGB=True)
+# imgs, labels = yolo.read_file_to_dataset_xml(IMAGES_PATH, LABELS_PATH)
 
 # Split data
 test_ = int(len(imgs) * 0.2)
@@ -42,7 +44,7 @@ train_label = labels[test_ + val_:]
 print("shape of training img:", train_img.shape)
 print("shape of training label:", train_label.shape)
 
-vis_path = "C:/Users/Administrator/Desktop/Multimodal-Object-Detection/"
+vis_path = "C:/Users/Administrator/Desktop/"
 for i in range(len(test_img[0:5])):
     figax = yolo.vis_img(test_img[i],
                          test_label[i],
