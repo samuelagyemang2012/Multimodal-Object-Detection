@@ -5,48 +5,27 @@ from utils.measurement import PR_func
 from tensorflow.keras.optimizers import Adam
 
 INPUT_SHAPE = (448, 448, 3)
-CLASS_NAMES = ["car", "person"]
+CLASS_NAMES = ["car"]
 CLASS_NUM = len(CLASS_NAMES)
 BATCH_SIZE = 4
 BBOX_NUM = 2
-IMAGES_PATH = "D:/Datasets/infrared_dataset/resized/images/"  # "C:/Users/Administrator/Desktop/cars_resized/images/"
-CSV_PATH = "D:/Datasets/infrared_dataset/resized/annotations_2.csv"  # "C:/Users/Administrator/Desktop/cars_resized/all.csv"
-COLUMNS = ['image', "xmin", "ymin", "xmax", "ymax", 'class_id']  # ['file', "x1", "y1", "x2", "y2", 'class']
-# COLUMNS =
-LABELS_PATH = "D:/Datasets/infrared_dataset/resized/annotations_1/"
+IMAGES_PATH = "C:/Users/Administrator/Desktop/cars_resized/images/"
+CSV_PATH = "C:/Users/Administrator/Desktop/cars_resized/all.csv"
+COLUMNS = ['image', "xmin", "ymin", "xmax", "ymax", 'class_id']
 EPOCHS = 1
 
 # Load model
 yolo = Yolo(INPUT_SHAPE, CLASS_NAMES)
 
 # Load data
-imgs, labels = yolo.read_file_to_dataset(IMAGES_PATH, CSV_PATH, shuffle=False)
-# imgs, labels = yolo.read_file_to_dataset(IMAGES_PATH, LABELS_PATH, shuffle=False)
-# imgs1, labels1, filenames = prepare_data(CSV_PATH, IMAGES_PATH, 7, CLASS_NUM, COLUMNS)
-
-print("A")
-print("")
-print(labels.shape)
-print("B")
-# print(labels1.shape)
-print("")
-print("A")
-print(labels[0])
-print("------------------------------------")
-print(labels[1])
-print("")
-print("B")
-# print(labels1[0])
+imgs, labels = yolo.read_file_to_dataset_csv(IMAGES_PATH, CSV_PATH, is_RGB=True)
 
 # Split data
-test_ = int(len(imgs) * 0.2)  # 0:150
-val_ = int(len(imgs) * 0.1)  # 150: 150 +75
+test_ = int(len(imgs) * 0.2)
+val_ = int(len(imgs) * 0.1)
 
 test_img = imgs[0: test_]
 test_label = labels[0: test_]
-
-# test_img1 = imgs1[0: test_]
-# test_label1 = labels1[0: test_]
 
 print("shape of testing img:", test_img.shape)
 print("shape of testing label:", test_label.shape)
@@ -63,6 +42,7 @@ train_label = labels[test_ + val_:]
 print("shape of training img:", train_img.shape)
 print("shape of training label:", train_label.shape)
 
+vis_path = "C:/Users/Administrator/Desktop/Multimodal-Object-Detection/"
 for i in range(len(test_img[0:5])):
     figax = yolo.vis_img(test_img[i],
                          test_label[i],
@@ -71,19 +51,8 @@ for i in range(len(test_img[0:5])):
                          box_color="b",
                          point_radius=0,
                          return_fig_ax=True,
-                         savefig_path="C:/Users/Sam/Desktop/xxx/" + str(i) + ".png")
+                         savefig_path=vis_path + str(i) + ".png")
 
-# for i in range(len(test_img1[0:1])):
-#     figax = yolo.vis_img(test_img1[i],
-#                          test_label1[i],
-#                          nms_mode=0,
-#                          text_fontsize=0,
-#                          box_color="b",
-#                          point_radius=0,
-#                          return_fig_ax=False,
-#                          savefig_path="C:/Users/Sam/Desktop/" + str(i) + ".png")
-
-#
 # Compile model
 binary_weight = get_class_weight(
     labels[..., 4:5],

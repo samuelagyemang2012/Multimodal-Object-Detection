@@ -82,7 +82,7 @@ class Yolo(object):
         self.bbox_num = bbox_num
         self.grid_shape = self.model.output.shape[1:3]
 
-    def read_file_to_dataset(
+    def read_file_to_dataset_xml(
             self, img_path=None, label_path=None,
             label_format="labelimg",
             rescale=1 / 255,
@@ -91,7 +91,6 @@ class Yolo(object):
             aug_times=1,
             shuffle=True, seed=None,
             encoding="big5",
-            # columns=["image", "xmin", "ymin", "xmax", "ymax"],
             thread_num=10):
 
         """Read the images and annotaions
@@ -126,30 +125,41 @@ class Yolo(object):
             - shape of label: (batch_size, grid_heights, grid_widths, info)
         """
 
-        # img_data, label_data, path_list = tools.read_file(
-        #     img_path=img_path,
-        #     label_path=label_path,
-        #     label_format=label_format,
-        #     size=self.input_shape[:2],
-        #     grid_shape=self.grid_shape,
-        #     class_names=self.class_names,
-        #     rescale=rescale,
-        #     preprocessing=preprocessing,
-        #     augmenter=augmenter,
-        #     aug_times=aug_times,
-        #     shuffle=shuffle, seed=seed,
-        #     encoding=encoding,
-        #     thread_num=thread_num)
-
-        img_data, label_data = tools.read_file2(
+        img_data, label_data, path_list = tools.read_file(
             img_path=img_path,
             label_path=label_path,
+            label_format=label_format,
             size=self.input_shape[:2],
             grid_shape=self.grid_shape,
             class_names=self.class_names,
-            encoding=encoding)
+            rescale=rescale,
+            preprocessing=preprocessing,
+            augmenter=augmenter,
+            aug_times=aug_times,
+            shuffle=shuffle, seed=seed,
+            encoding=encoding,
+            thread_num=thread_num)
 
+        # img_data, label_data = tools.read_file2(
+        #     img_path=img_path,
+        #     label_path=label_path,
+        #     size=self.input_shape[:2],
+        #     grid_shape=self.grid_shape,
+        #     class_names=self.class_names,
+        #     encoding=encoding)
         # self.file_names = path_list
+
+        return img_data, label_data
+
+    def read_file_to_dataset_csv(self, img_path=None, label_path=None, is_RGB=False, shuffle=True, seed=None):
+
+        img_data, label_data = tools.read_file2(
+            img_path=img_path,
+            is_RGB=is_RGB,
+            label_path=label_path,
+            size=self.input_shape[:2],
+            grid_shape=self.grid_shape,
+            class_names=self.class_names)
 
         return img_data, label_data
 
