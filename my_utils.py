@@ -131,7 +131,7 @@ def resize_data(size, image_folder, annotation_path, columns, dest_image_folder,
         new_bbox = resize_bbox(bbox[i], (h, w), size)
         new_bboxes.append([images[i], new_bbox[0], new_bbox[1], new_bbox[2], new_bbox[3], classes[i]])
 
-    new_df = pd.DataFrame(new_bboxes, columns=['file', 'x1', 'y1', 'x2', 'y2', 'class'])
+    new_df = pd.DataFrame(new_bboxes, columns=['file', 'xmin', 'ymin', 'xmax', 'ymax', 'class'])
     new_df.to_csv(dest_ann_path, index=False)
 
 # image_folder_ = "C:/Users/Administrator/Desktop/datasets/cars/cars_train/"

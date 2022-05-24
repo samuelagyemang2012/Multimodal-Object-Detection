@@ -11,8 +11,8 @@ import gc
 gc.collect()
 
 INPUT_SHAPE_1 = (448, 448, 3)
-INPUT_SHAPE_2 = (128,)
-CLASS_NAMES = ["car"]
+INPUT_SHAPE_2 = (448, 448, 3)
+CLASS_NAMES = ["car", "cyclist", "pedestrian"]
 BATCH_SIZE = 1
 BBOX_NUM = 2
 IMAGES_PATH = "C:/Users/Administrator/Desktop/resized/images/"
@@ -99,8 +99,8 @@ binary_weight = get_class_weight(
 loss = yolo.loss(binary_weight)
 metrics = yolo.metrics("obj+iou+recall0.5")
 yolo.model.compile(optimizer=Adam(learning_rate=1e-4),
-              loss=loss,
-              metrics=metrics)
+                   loss=loss,
+                   metrics=metrics)
 
 # Fit model
 history = yolo.model.fit([train_imgs, train_radar_data],

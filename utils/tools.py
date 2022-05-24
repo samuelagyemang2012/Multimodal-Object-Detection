@@ -1143,7 +1143,7 @@ def read_file2(img_path=None, label_path=None, size=(448, 448), grid_shape=(7, 7
     def _process_paths(csv_path):
         df = pd.read_csv(csv_path)
         images = df["image"].unique().tolist()
-        classes = df["class_id"].unique().tolist()
+        classes = df["class"].unique().tolist()
         return df, images, len(classes)
 
     def _encode_to_array(img, bbs, grid_shape, pos, name, labels):
@@ -1192,7 +1192,7 @@ def read_file2(img_path=None, label_path=None, size=(448, 448), grid_shape=(7, 7
             img_ = img_ / 255.
 
             bbox = frame[frame["image"] == im]
-            bbox = bbox[["xmin", "ymin", "xmax", "ymax", "class_id"]].to_numpy()
+            bbox = bbox[["xmin", "ymin", "xmax", "ymax", "class"]].to_numpy()
             bbox = bbox.astype(int)
 
             bbs = []

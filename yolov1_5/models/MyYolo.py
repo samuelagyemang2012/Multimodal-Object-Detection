@@ -48,7 +48,7 @@ class MyYolo(object):
 
     def __init__(self,
                  input_shape1=(448, 448, 3),
-                 input_shape2=(128,),
+                 input_shape2=(448, 448, 3),
                  class_names=[]):
         self.input_shape1 = input_shape1
         self.input_shape2 = input_shape2
@@ -75,9 +75,9 @@ class MyYolo(object):
         Returns:
             A tf.keras Model.
         """
-        d_body, r_body = my_yolo_body(self.input_shape1, self.input_shape2, pretrained_backbone)
+        d_body1, d_body2 = my_yolo_body(self.input_shape1, self.input_shape2, pretrained_backbone)
         # Changes made here
-        self.model = my_yolo_head(d_body, r_body, bbox_num, self.class_num)
+        self.model = my_yolo_head(d_body1, d_body2, bbox_num, self.class_num)
 
         if pretrained_weights is not None:
             self.model.load_weights(pretrained_weights)

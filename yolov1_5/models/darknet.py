@@ -40,10 +40,10 @@ def my_yolo_body(input_shape1=(448, 448, 3), input_shape2=(128,), pretrained_dar
     input1 = Input(input_shape1)
     input2 = Input(input_shape2)
 
-    darknet = Model(input1, darknet_body(input1))
-    radarnet = Model(input2, radarnet_body(input2))
+    darknet1 = Model(input1, darknet_body(input1))
+    darknet2 = Model(input2, darknet_body(input2))
 
-    return darknet, radarnet
+    return darknet1, darknet2
 
 
 def yolo_head(model_body, bbox_num=2, class_num=10):

@@ -2,14 +2,15 @@ from yolov1_5.models.Yolo import Yolo
 from utils.tools import get_class_weight
 from utils.measurement import PR_func
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.utils import plot_model
 
 INPUT_SHAPE = (448, 448, 3)
-CLASS_NAMES = ["car"]
+CLASS_NAMES = ["car", "cyclist", "pedestrian"]
 CLASS_NUM = len(CLASS_NAMES)
 BATCH_SIZE = 1
 BBOX_NUM = 2
-IMAGES_PATH = "C:/Users/Administrator/Desktop/cars_resized/images/"
-CSV_PATH = "C:/Users/Administrator/Desktop/cars_resized/mini-500.csv"
+IMAGES_PATH = "C:/Users/Administrator/Desktop/datasets/CRUW/ALL/resized/images/"
+CSV_PATH = "C:/Users/Administrator/Desktop/datasets/CRUW/ALL/resized/resized_data.csv"
 # COLUMNS = ['image', "xmin", "ymin", "xmax", "ymax", 'class_id']
 EPOCHS = 5
 
@@ -63,20 +64,22 @@ print(binary_weight)
 # Create model
 model = yolo.create_model()
 
-
 loss = yolo.loss(binary_weight)
 metrics = yolo.metrics("obj+iou+recall0.5")
 yolo.model.compile(optimizer=Adam(learning_rate=1e-4),
                    loss=loss,
                    metrics=metrics)
 
-# Fit model
-history = yolo.model.fit(imgs,
-                         labels,
-                         epochs=EPOCHS)
+print(yolo.model.summary())
+plot_model(yolo.model)
 
-# Save model
-yolo.model.save('C:/Users/Administrator/Desktop/yolo_model.h5')
-
-# print(PR_func.get_map(mode="voc2012")
-prediction = yolo.model.predict(test_img)
+# # Fit model
+# history = yolo.model.fit(imgs,
+#                          labels,
+#                          epochs=EPOCHS)
+#
+# # Save model
+# yolo.model.save('C:/Users/Administrator/Desktop/yolo_model.h5')
+#
+# # print(PR_func.get_map(mode="voc2012")
+# prediction = yolo.model.predict(test_img)
