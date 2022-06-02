@@ -1166,7 +1166,8 @@ def read_file2(img_path=None, label_path=None, size=(448, 448), grid_shape=(7, 7
             if x_i < grid_shape[1] and y_i < grid_shape[0]:
                 if label_data[pos, y_i, x_i, 4] == 1:
                     # Detect whether objects overlap
-                    print("Notice! Repeat!:", name, y_i, x_i)
+                    print("")
+                    # print("Notice! Repeat!:", name, y_i, x_i)
 
                 label_data[pos, y_i, x_i, 0] = (x % grid_width / grid_width)
                 label_data[pos, y_i, x_i, 1] = (y % grid_height / grid_height)

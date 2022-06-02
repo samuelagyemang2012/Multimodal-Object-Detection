@@ -26,7 +26,6 @@ val_ = int(len(imgs) * 0.1)
 
 test_img = imgs[0: test_]
 test_label = labels[0: test_]
-
 print("shape of testing img:", test_img.shape)
 print("shape of testing label:", test_label.shape)
 print()

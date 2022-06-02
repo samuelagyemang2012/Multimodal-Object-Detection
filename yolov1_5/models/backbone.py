@@ -1,5 +1,5 @@
 from tensorflow.keras.layers import Conv2D, Dense
-from tensorflow.keras.layers import MaxPooling2D, Dropout
+from tensorflow.keras.layers import MaxPooling2D, Dropout, Add, Concatenate
 from tensorflow.keras.layers import LeakyReLU
 from tensorflow.keras.layers import BatchNormalization as BN
 
@@ -45,16 +45,10 @@ def darknet_body(x):
     return conv6
 
 
-def radarnet_body(x):
-    dense1 = Dense(1024, activation='relu')(x)
-    dense2 = Dense(1024, activation='relu')(dense1)
-    drop = Dropout(0.5)(dense2)
+def multi_darknet(input1, input2):
+    rgb_body = darknet_body(input1)
+    rfm_body = darknet_body(input2)
 
-    return drop
+    x = Add()([rgb_body, rfm_body])
 
-    # model.add(Dense(1024, activation='relu', input_shape=input_shape))
-    # model.add(Dense(1024, activation='relu'))
-    # model.add(Dropout(0.5))
-    # out = (7 * 7 * 11)
-    # model.add(Dense(out, activation='relu'))
-    # model.add(Dense(num_classes, activation='softmax'))
+    return x

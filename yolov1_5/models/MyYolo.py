@@ -5,7 +5,7 @@
 """
 
 from utils import tools
-from yolov1_5.models.darknet import my_yolo_body, my_yolo_head
+from yolov1_5.models.darknet import my_yolo_body, yolo_head
 from yolov1_5.losses import wrap_yolo_loss
 from yolov1_5.metrics import wrap_obj_acc, wrap_mean_iou
 from yolov1_5.metrics import wrap_class_acc, wrap_recall
@@ -47,12 +47,10 @@ class MyYolo(object):
     """
 
     def __init__(self,
-                 input_shape1=(448, 448, 3),
-                 input_shape2=(448, 448, 3),
+                 input_shape=(448, 448, 3),
                  class_names=[]):
-        self.input_shape1 = input_shape1
-        self.input_shape2 = input_shape2
-        self.grid_shape = input_shape1[0] // 64, input_shape1[1] // 64
+        self.input_shape = input_shape
+        self.grid_shape = input_shape[0] // 64, input_shape[1] // 64
         self.bbox_num = 2
         self.class_names = class_names
         self.class_num = len(class_names)
@@ -63,6 +61,7 @@ class MyYolo(object):
                      bbox_num=2,
                      pretrained_weights=None,
                      pretrained_backbone=None):
+
         """Create a yolo model.
 
         Args:
@@ -75,9 +74,12 @@ class MyYolo(object):
         Returns:
             A tf.keras Model.
         """
-        d_body1, d_body2 = my_yolo_body(self.input_shape1, self.input_shape2, pretrained_backbone)
+
+        model_body = my_yolo_body(self.input_shape)
         # Changes made here
-        self.model = my_yolo_head(d_body1, d_body2, bbox_num, self.class_num)
+        self.model = yolo_head(model_body,
+                               bbox_num,
+                               self.class_num)
 
         if pretrained_weights is not None:
             self.model.load_weights(pretrained_weights)
@@ -85,7 +87,7 @@ class MyYolo(object):
         self.bbox_num = bbox_num
         self.grid_shape = self.model.output.shape[1:3]
 
-    def read_file_to_dataset(
+    def read_file_to_dataset_xml(
             self, img_path=None, label_path=None,
             label_format="labelimg",
             rescale=1 / 255,
@@ -130,7 +132,7 @@ class MyYolo(object):
             img_path=img_path,
             label_path=label_path,
             label_format=label_format,
-            size=self.input_shape1[:2],
+            size=self.input_shape[:2],
             grid_shape=self.grid_shape,
             class_names=self.class_names,
             rescale=rescale,
@@ -141,6 +143,18 @@ class MyYolo(object):
             encoding=encoding,
             thread_num=thread_num)
         self.file_names = path_list
+
+        return img_data, label_data
+
+    def read_file_to_dataset_csv(self, img_path=None, label_path=None, is_RGB=False):
+
+        img_data, label_data = tools.read_file2(
+            img_path=img_path,
+            is_RGB=is_RGB,
+            label_path=label_path,
+            size=self.input_shape[:2],
+            grid_shape=self.grid_shape,
+            class_names=self.class_names)
 
         return img_data, label_data
 
