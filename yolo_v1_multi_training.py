@@ -50,6 +50,7 @@ binary_weight = get_class_weight(
 
 loss = yolo.loss(binary_weight)
 metrics = yolo.metrics("obj+iou+recall0.5")
+
 yolo.model.compile(optimizer=Adam(learning_rate=1e-4),
                    loss=loss,
                    metrics=metrics)
